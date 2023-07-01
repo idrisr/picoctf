@@ -5,7 +5,7 @@ module Main where
 import Data.Text (Text, unpack)
 import qualified ExifTool as ET
 import Data.Text.Encoding.Base64
-
+import System.Environment
 
 -- ExifTool Version Number         : 12.62
 -- File Name                       : cat.jpg
@@ -60,6 +60,8 @@ tags m =
         <*> ET.get (ET.Tag "ColorComponents") m
 
 main :: IO ()
-main = ET.withExifTool $ \et -> do
-    m <- ET.readMeta et [] "cat.jpg"
-    putStrLn $ unpack $ (printer . myDecode . tags) m
+main =  do
+    (x:_) <- getArgs
+    ET.withExifTool $ \et -> do
+        m <- ET.readMeta et [] x
+        putStrLn $ unpack $ (printer . myDecode . tags) m

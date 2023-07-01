@@ -91,7 +91,27 @@
         '';
 
       p05 = with pkgs;
-        haskell.packages.${compiler}.callPackage ./challenges/05/cabal.nix { };
+        let
+          a = haskell.packages.${compiler}.callPackage ./challenges/05/cabal.nix
+            { };
+          b = symlinkJoin rec {
+            name = "wtf";
+            paths = [ a ];
+            nativeBuildInputs = [ exiftool ];
+            buildInputs = [ makeWrapper ];
+            postBuild = ''
+              wrapProgram $out/bin/x05 --set PATH "${
+                lib.makeBinPath nativeBuildInputs
+              }"
+            '';
+          };
+        in writeShellApplication {
+          runtimeInputs = [ ];
+          name = "pita";
+          text = ''
+            ${b}/bin/x05 ${./challenges/05/cat.jpg};
+          '';
+        };
 
     in {
       packages.${system} = { inherit p01 p02 p03 p03wrapped p04 p05; };
@@ -114,7 +134,7 @@
         };
         p05 = with pkgs; {
           type = "app";
-          program = "${p05}/bin/x05";
+          program = "${p05}/bin/pita";
         };
       };
       devShells.${system} = {
