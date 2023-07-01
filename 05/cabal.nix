@@ -3,11 +3,9 @@ mkDerivation {
   pname = "x05";
   version = "0.1.0.0";
   src = ./.;
-  isLibrary = true;
+  isLibrary = false;
   isExecutable = true;
-  libraryHaskellDepends = [ base exiftool ];
   executableHaskellDepends = [ base base64 exiftool text ];
-  testHaskellDepends = [ base ];
   license = lib.licenses.mit;
   mainProgram = "x05";
 }
