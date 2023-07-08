@@ -1,0 +1,22 @@
+cabal-version:      3.0
+name:               x06
+version:            0.1.0.0
+license:            MIT
+license-file:       LICENSE
+author:             Idris Raja
+maintainer:         idris.raja@gmail.com
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+
+common warnings
+    ghc-options: -Wall
+
+executable x06
+    import:           warnings
+    main-is:          Main.hs
+    build-depends:    base ^>=4.16.4.0,
+                      bytestring,
+                      network,
+                      split
+    hs-source-dirs:   app
+    default-language: Haskell2010

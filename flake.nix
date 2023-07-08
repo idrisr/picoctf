@@ -14,6 +14,7 @@
         haskell-language-server
         implicit-hie
         cabal-install
+        cabal2nix
         pkgs.zlib
       ];
 
@@ -106,13 +107,14 @@
             '';
           };
         in writeShellApplication {
-          runtimeInputs = [ ];
           name = "pita";
           text = ''
             ${b}/bin/x05 ${./challenges/05/cat.jpg};
           '';
         };
 
+      p06 = with pkgs;
+        haskell.packages.${compiler}.callPackage ./challenges/06/cabal.nix { };
     in {
       packages.${system} = { inherit p01 p02 p03 p03wrapped p04 p05; };
       apps.${system} = {
@@ -136,8 +138,14 @@
           type = "app";
           program = "${p05}/bin/pita";
         };
+        p06 = with pkgs; {
+          type = "app";
+          program = "${p06}/bin/x06";
+        };
       };
-      devShells.${system} = {
+
+      devShells.${system} = rec {
+        default = haskell;
         haskell = with pkgs;
           mkShell {
             buildInputs = haskellDevTools ++ [ exiftool ];
@@ -146,6 +154,7 @@
               alias v=vim
             '';
           };
+
         python = with pkgs;
           mkShell {
             buildInputs =
